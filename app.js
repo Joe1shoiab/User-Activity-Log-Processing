@@ -7,6 +7,9 @@ app.get("/", (req, res) => {
   res.send("User Activity Log Processing service!");
 });
 
+console.log('[Startup] Connecting to MongoDB...');
+    await connectMongo();
+    
 app.listen(config.server.port, () => {
   console.log(`App listening at http://localhost:${config.server.port}`);
 });

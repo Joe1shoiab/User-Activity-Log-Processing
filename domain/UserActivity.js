@@ -47,6 +47,27 @@ class UserActivity {
       processedAt: null,
     });
   }
+  static fromDocument(doc) {
+    return new UserActivity({
+      eventId: doc.eventId,
+      userId: doc.userId,
+      activityType: doc.activityType,
+      metadata: doc.metadata,
+      occurredAt: doc.occurredAt,
+      processedAt: doc.processedAt,
+    });
+  }
+
+  toDocument() {
+    return {
+      eventId: this.eventId,
+      userId: this.userId,
+      activityType: this.activityType,
+      metadata: this.metadata,
+      occurredAt: new Date(this.occurredAt),
+      processedAt: this.processedAt ? new Date(this.processedAt) : new Date(),
+    };
+  }
 }
 
 module.exports = {

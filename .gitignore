@@ -13,13 +13,27 @@ yarn-error.log*
 
 # IDE
 .vscode/
+.idea/
+*.swp
+*.swo
+*.sublime-workspace
+*.sublime-project
 
+# OS
 .DS_Store
 Thumbs.db
 
+# Logs
 logs/
 *.log
 
+# Test coverage
+coverage/
+.nyc_output/
 
+# Build output
 dist/
 build/
+
+# Docker volumes (local)
+data/

@@ -1,4 +1,5 @@
 const { v4: uuidv4 } = require("uuid");
+
 const ActivityType = Object.freeze({
   USER_LOGIN: "USER_LOGIN",
   USER_LOGOUT: "USER_LOGOUT",
@@ -47,6 +48,28 @@ class UserActivity {
       processedAt: null,
     });
   }
+
+  static fromKafkaMessage(message) {
+    const { eventId, userId, activityType, metadata, occurredAt } = message;
+
+    if (!eventId || !userId || !activityType || !occurredAt) {
+      throw new Error("Invalid Kafka message: missing required fields");
+    }
+
+    if (!VALID_ACTIVITY_TYPES.includes(activityType)) {
+      throw new Error(`Invalid activityType in message: ${activityType}`);
+    }
+
+    return new UserActivity({
+      eventId,
+      userId,
+      activityType,
+      metadata: metadata || {},
+      occurredAt,
+      processedAt: null,
+    });
+  }
+
   static fromDocument(doc) {
     return new UserActivity({
       eventId: doc.eventId,
@@ -58,6 +81,16 @@ class UserActivity {
     });
   }
 
+  toKafkaMessage() {
+    return {
+      eventId: this.eventId,
+      userId: this.userId,
+      activityType: this.activityType,
+      metadata: this.metadata,
+      occurredAt: this.occurredAt,
+    };
+  }
+
   toDocument() {
     return {
       eventId: this.eventId,
@@ -67,6 +100,14 @@ class UserActivity {
       occurredAt: new Date(this.occurredAt),
       processedAt: this.processedAt ? new Date(this.processedAt) : new Date(),
     };
+  }
+
+  markAsProcessed() {
+    this.processedAt = new Date().toISOString();
+  }
+
+  static isValidActivityType(type) {
+    return VALID_ACTIVITY_TYPES.includes(type);
   }
 }
 

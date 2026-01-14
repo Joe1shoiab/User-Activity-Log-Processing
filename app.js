@@ -8,8 +8,11 @@ app.get("/", (req, res) => {
 });
 
 console.log('[Startup] Connecting to MongoDB...');
-    await connectMongo();
-    
+await connectMongo();
+
+console.log('[Startup] Connecting to Kafka...');
+await getProducer();
+
 app.listen(config.server.port, () => {
   console.log(`App listening at http://localhost:${config.server.port}`);
 });

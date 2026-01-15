@@ -93,7 +93,7 @@ services:
       - "27017:27017"
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
-      MONGO_INITDB_ROOT_PASSWORD: 239474@EyeGo
+      MONGO_INITDB_ROOT_PASSWORD: password
       MONGO_INITDB_DATABASE: activity-logs
     volumes:
       - mongodb-data:/data/db
@@ -118,8 +118,7 @@ services:
     environment:
       NODE_ENV: production
       PORT: 3000
-      # MongoDB connection (with auth)
-      MONGO_URI: mongodb://admin:239474@EyeGo@mongodb:27017/activity-logs?authSource=admin
+      MONGO_URI: mongodb://admin:password@mongodb:27017/activity-logs?authSource=admin
       KAFKA_BROKERS: kafka:29092
       KAFKA_CLIENT_ID: activity-api
       KAFKA_TOPIC: user-activity-events
@@ -154,8 +153,7 @@ services:
     command: ["node", "consumer.js"]
     environment:
       NODE_ENV: production
-      # MongoDB connection (with auth)
-      MONGO_URI: mongodb://admin:239474@EyeGo@mongodb:27017/activity-logs?authSource=admin
+      MONGO_URI: mongodb://admin:password@mongodb:27017/activity-logs?authSource=admin
       KAFKA_BROKERS: kafka:29092
       KAFKA_CLIENT_ID: activity-consumer
       KAFKA_TOPIC: user-activity-events
@@ -170,6 +168,7 @@ services:
     networks:
       - activity-network
     restart: unless-stopped
+
 networks:
   activity-network:
     driver: bridge

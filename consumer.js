@@ -57,4 +57,16 @@ async function shutdown(signal) {
   }
 }
 
+process.on('SIGTERM', () => shutdown('SIGTERM'));
+process.on('SIGINT', () => shutdown('SIGINT'));
+
+process.on('uncaughtException', (error) => {
+  console.error('[Consumer] Uncaught Exception:', error);
+  shutdown('uncaughtException').finally(() => process.exit(1));
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('[Consumer] Unhandled Rejection at:', promise, 'reason:', reason);
+  shutdown('unhandledRejection').finally(() => process.exit(1));
+});
 startWorker();
